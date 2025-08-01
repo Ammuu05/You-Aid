@@ -1,24 +1,259 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YouAid - Connecting Hearts to Homes</title>
-    <meta name="description" content="Report and help relocate elderly or differently-abled individuals by connecting them with nearby care homes and support services." />
-    <meta name="author" content="YouAid" />
+    <meta name="description" content="Report and help relocate elderly or differently-abled individuals by connecting them with nearby care homes and support services.">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <h2>YouAid</h2>
+            </div>
+            <div class="nav-menu" id="nav-menu">
+                <a href="#home" class="nav-link">Home</a>
+                <a href="#about" class="nav-link">About</a>
+                <a href="#services" class="nav-link">Services</a>
+                <a href="#contact" class="nav-link">Contact</a>
+                <button class="btn btn-primary" onclick="openReportModal()">Report Case</button>
+            </div>
+            <div class="nav-toggle" id="nav-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
 
-    <meta property="og:title" content="YouAid - Connecting Hearts to Homes" />
-    <meta property="og:description" content="Report and help relocate elderly or differently-abled individuals by connecting them with nearby care homes and support services." />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1 class="hero-title">Connecting Hearts to Homes</h1>
+                <p class="hero-subtitle">Report and help relocate elderly or differently-abled individuals by connecting them with nearby care homes and support services.</p>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary btn-large" onclick="openReportModal()">Report a Case</button>
+                    <button class="btn btn-secondary btn-large" onclick="scrollToSection('services')">Find Care Homes</button>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="https://images.pexels.com/photos/339620/pexels-photo-339620.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Caring hands" />
+            </div>
+        </div>
+    </section>
 
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@lovable_dev" />
-    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
-  </head>
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="section-header">
+                <h2>About YouAid</h2>
+                <p>We bridge the gap between those in need and caring communities</p>
+            </div>
+            <div class="about-grid">
+                <div class="about-card">
+                    <div class="about-icon">🏠</div>
+                    <h3>Safe Homes</h3>
+                    <p>Connect individuals with verified care homes and support facilities in their area.</p>
+                </div>
+                <div class="about-card">
+                    <div class="about-icon">❤️</div>
+                    <h3>Compassionate Care</h3>
+                    <p>Ensure every person receives the dignity and care they deserve in their time of need.</p>
+                </div>
+                <div class="about-card">
+                    <div class="about-icon">🤝</div>
+                    <h3>Community Support</h3>
+                    <p>Build stronger communities by connecting neighbors and local support services.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+    <!-- Services Section -->
+    <section id="services" class="services">
+        <div class="container">
+            <div class="section-header">
+                <h2>Our Services</h2>
+                <p>Comprehensive support for those who need it most</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card">
+                    <h3>Emergency Reporting</h3>
+                    <p>Quick and easy reporting system for individuals who need immediate assistance and relocation support.</p>
+                    <button class="btn btn-outline" onclick="openReportModal()">Report Now</button>
+                </div>
+                <div class="service-card">
+                    <h3>Care Home Directory</h3>
+                    <p>Comprehensive database of verified care homes and support facilities with availability information.</p>
+                    <button class="btn btn-outline" onclick="showCareHomes()">Browse Homes</button>
+                </div>
+                <div class="service-card">
+                    <h3>Support Coordination</h3>
+                    <p>Professional coordination between families, care providers, and support services for seamless transitions.</p>
+                    <button class="btn btn-outline" onclick="scrollToSection('contact')">Get Support</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Care Homes Section -->
+    <section id="care-homes" class="care-homes" style="display: none;">
+        <div class="container">
+            <div class="section-header">
+                <h2>Available Care Homes</h2>
+                <p>Find the perfect care facility near you</p>
+            </div>
+            <div class="search-bar">
+                <input type="text" id="location-search" placeholder="Enter location or zip code">
+                <button class="btn btn-primary" onclick="searchCareHomes()">Search</button>
+            </div>
+            <div class="care-homes-grid" id="care-homes-list">
+                <!-- Care homes will be populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2>Get in Touch</h2>
+                <p>We're here to help 24/7</p>
+            </div>
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <div class="contact-icon">📞</div>
+                        <div>
+                            <h4>Emergency Hotline</h4>
+                            <p>1-800-YOUAID-1</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">✉️</div>
+                        <div>
+                            <h4>Email Support</h4>
+                            <p>help@youaid.org</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">🕒</div>
+                        <div>
+                            <h4>Available</h4>
+                            <p>24/7 Emergency Support</p>
+                        </div>
+                    </div>
+                </div>
+                <form class="contact-form" onsubmit="submitContactForm(event)">
+                    <input type="text" placeholder="Your Name" required>
+                    <input type="email" placeholder="Your Email" required>
+                    <input type="tel" placeholder="Phone Number">
+                    <textarea placeholder="How can we help you?" rows="5" required></textarea>
+                    <button type="submit" class="btn btn-primary">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>YouAid</h3>
+                    <p>Connecting hearts to homes, one person at a time.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <a href="#home">Home</a>
+                    <a href="#about">About</a>
+                    <a href="#services">Services</a>
+                    <a href="#contact">Contact</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <a href="#" onclick="openReportModal()">Report Case</a>
+                    <a href="#" onclick="showCareHomes()">Find Care Homes</a>
+                    <a href="tel:1-800-968-2431">Emergency Hotline</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 YouAid. All rights reserved. | Privacy Policy | Terms of Service</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Report Modal -->
+    <div id="report-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Report a Case</h2>
+                <span class="close" onclick="closeReportModal()">&times;</span>
+            </div>
+            <form class="report-form" onsubmit="submitReport(event)">
+                <div class="form-group">
+                    <label>Person's Information</label>
+                    <input type="text" placeholder="Full Name" required>
+                    <input type="number" placeholder="Approximate Age" min="1" max="120">
+                </div>
+                <div class="form-group">
+                    <label>Location Found</label>
+                    <input type="text" placeholder="Street Address or Description" required>
+                    <input type="text" placeholder="City, State" required>
+                </div>
+                <div class="form-group">
+                    <label>Condition & Needs</label>
+                    <select required>
+                        <option value="">Select Primary Need</option>
+                        <option value="elderly-care">Elderly Care</option>
+                        <option value="disability-support">Disability Support</option>
+                        <option value="mental-health">Mental Health Support</option>
+                        <option value="medical-care">Medical Care</option>
+                        <option value="temporary-shelter">Temporary Shelter</option>
+                    </select>
+                    <textarea placeholder="Additional details about the person's condition and immediate needs" rows="4"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Your Contact Information</label>
+                    <input type="text" placeholder="Your Name" required>
+                    <input type="tel" placeholder="Your Phone Number" required>
+                    <input type="email" placeholder="Your Email">
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" required>
+                        I confirm this information is accurate and I consent to YouAid contacting me about this case.
+                    </label>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeReportModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Submit Report</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="success-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Thank You!</h2>
+                <span class="close" onclick="closeSuccessModal()">&times;</span>
+            </div>
+            <div class="success-content">
+                <div class="success-icon">✅</div>
+                <p>Your report has been submitted successfully. Our team will review it and take appropriate action within 2 hours.</p>
+                <p><strong>Reference ID:</strong> <span id="reference-id"></span></p>
+                <button class="btn btn-primary" onclick="closeSuccessModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
 </html>
