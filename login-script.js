@@ -114,11 +114,15 @@ document.getElementById('signup-form').addEventListener('submit', function(event
     // Validation
     if (password !== confirmPassword) {
         showMessage('Passwords do not match. Please try again.');
+        submitButton.classList.remove('loading');
+        submitButton.disabled = false;
         return;
     }
     
     if (password.length < 6) {
         showMessage('Password must be at least 6 characters long.');
+        submitButton.classList.remove('loading');
+        submitButton.disabled = false;
         return;
     }
     
