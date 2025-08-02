@@ -1,5 +1,25 @@
 // Navigation functionality
 document.addEventListener('DOMContentLoaded', function() {
+    // Check if user is logged in
+    const currentUser = localStorage.getItem('youaid-current-user');
+    if (!currentUser) {
+        // User is not logged in, redirect to login page
+        window.location.href = 'login.html';
+        return;
+    }
+    
+    // User is logged in, show their info
+    try {
+        const user = JSON.parse(currentUser);
+        updateUserInterface(user);
+    } catch (error) {
+        console.error('Error parsing user data:', error);
+        // Clear invalid data and redirect to login
+        localStorage.removeItem('youaid-current-user');
+        window.location.href = 'login.html';
+        return;
+    }
+    
     const navToggle = document.getElementById('nav-toggle');
     const navMenu = document.getElementById('nav-menu');
     
@@ -44,6 +64,28 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+// Update user interface when logged in
+function updateUserInterface(user) {
+    const authButtons = document.getElementById('auth-buttons');
+    const userMenu = document.getElementById('user-menu');
+    const userName = document.getElementById('user-name');
+    
+    if (authButtons && userMenu && userName) {
+        authButtons.style.display = 'none';
+        userMenu.style.display = 'flex';
+        userName.textContent = `Welcome, ${user.name}`;
+    }
+}
+
+// Logout function
+function logout() {
+    if (confirm('Are you sure you want to logout?')) {
+        localStorage.removeItem('youaid-current-user');
+        localStorage.removeItem('youaid-remember-user');
+        window.location.href = 'login.html';
+    }
+}
+
 // Smooth scrolling function
 function scrollToSection(sectionId) {
     const element = document.getElementById(sectionId);
@@ -52,38 +94,17 @@ function scrollToSection(sectionId) {
     }
 }
 
-// Report Modal functionality
-function openReportModal() {
-    document.getElementById('report-modal').style.display = 'block';
-    document.body.style.overflow = 'hidden';
-}
-
-function closeReportModal() {
-    document.getElementById('report-modal').style.display = 'none';
-    document.body.style.overflow = 'auto';
-}
-
-function closeSuccessModal() {
-    document.getElementById('success-modal').style.display = 'none';
-    document.body.style.overflow = 'auto';
-}
-
-// Close modals when clicking outside
-window.addEventListener('click', function(event) {
-    const reportModal = document.getElementById('report-modal');
-    const successModal = document.getElementById('success-modal');
-    
-    if (event.target === reportModal) {
-        closeReportModal();
-    }
-    if (event.target === successModal) {
-        closeSuccessModal();
-    }
-});
-
 // Report form submission
 function submitReport(event) {
     event.preventDefault();
+    
+    // Check if user is logged in
+    const currentUser = localStorage.getItem('youaid-current-user');
+    if (!currentUser) {
+        alert('Please log in to submit a report.');
+        window.location.href = 'login.html';
+        return;
+    }
     
     // Simulate form processing
     const submitButton = event.target.querySelector('button[type="submit"]');
@@ -116,8 +137,58 @@ function submitReport(event) {
         });
         localStorage.setItem('youaid-reports', JSON.stringify(reports));
         
+        // Add user info to report
+        try {
+            const user = JSON.parse(currentUser);
+            reports[reports.length - 1].submittedBy = user.name;
+            reports[reports.length - 1].submitterEmail = user.email;
+            localStorage.setItem('youaid-reports', JSON.stringify(reports));
+        } catch (error) {
+            console.error('Error adding user info to report:', error);
+        }
+        
     }, 2000);
 }
+
+// Report Modal functionality
+function openReportModal() {
+    // Check if user is logged in
+    const currentUser = localStorage.getItem('youaid-current-user');
+    if (!currentUser) {
+        alert('Please log in to submit a report.');
+        window.location.href = 'login.html';
+        return;
+    }
+    
+    document.getElementById('report-modal').style.display = 'block';
+    document.body.style.overflow = 'hidden';
+}
+
+function closeReportModal() {
+    document.getElementById('report-modal').style.display = 'none';
+    document.body.style.overflow = 'auto';
+    
+    // Stop camera if it's running
+    stopCamera();
+}
+
+function closeSuccessModal() {
+    document.getElementById('success-modal').style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
+// Close modals when clicking outside
+window.addEventListener('click', function(event) {
+    const reportModal = document.getElementById('report-modal');
+    const successModal = document.getElementById('success-modal');
+    
+    if (event.target === reportModal) {
+        closeReportModal();
+    }
+    if (event.target === successModal) {
+        closeSuccessModal();
+    }
+});
 
 // Contact form submission
 function submitContactForm(event) {
