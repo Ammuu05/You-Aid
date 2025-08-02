@@ -415,3 +415,5 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+// Camera functionality
