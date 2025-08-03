@@ -66,12 +66,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Update user interface when logged in
 function updateUserInterface(user) {
+    const authButtons = document.getElementById('auth-buttons');
+    const userMenu = document.getElementById('user-menu');
     const userName = document.getElementById('user-name');
-    const userGreeting = document.getElementById('user-greeting');
     
-    if (userName && userGreeting) {
-        userName.textContent = `Welcome, ${user.name}!`;
-        userGreeting.style.display = 'block';
+    if (authButtons && userMenu && userName) {
+        authButtons.style.display = 'none';
+        userMenu.style.display = 'flex';
+        userName.textContent = `Welcome, ${user.name}`;
     }
 }
 
@@ -415,3 +417,119 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Camera functionality
+let currentPhotoData = null;
+
+// Photo option selection
+function selectPhotoOption(option) {
+    const uploadSection = document.getElementById('upload-section');
+    const cameraSection = document.getElementById('camera-section');
+    const optionButtons = document.querySelectorAll('.photo-option-btn');
+    
+    // Reset active states
+    optionButtons.forEach(btn => btn.classList.remove('active'));
+    
+    // Hide all sections
+    uploadSection.style.display = 'none';
+    cameraSection.style.display = 'none';
+    
+    // Stop camera if it's running
+    stopCamera();
+    
+    if (option === 'upload') {
+        uploadSection.style.display = 'block';
+        optionButtons[0].classList.add('active');
+    } else if (option === 'camera') {
+        cameraSection.style.display = 'block';
+        optionButtons[1].classList.add('active');
+    }
+}
+
+// Handle file upload
+function handleFileUpload(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            currentPhotoData = e.target.result;
+            displayPhotoPreview(currentPhotoData);
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+// Display photo preview
+function displayPhotoPreview(photoData) {
+    const preview = document.getElementById('photo-preview');
+    preview.innerHTML = `
+        <div class="photo-preview-container">
+            <img src="${photoData}" alt="Photo preview" style="max-width: 100%; max-height: 200px; border-radius: 0.5rem;">
+            <button type="button" class="btn btn-outline btn-small" onclick="removePhoto()" style="margin-top: 0.5rem;">Remove Photo</button>
+        </div>
+    `;
+}
+
+// Remove photo
+function removePhoto() {
+    currentPhotoData = null;
+    document.getElementById('photo-preview').innerHTML = '';
+    document.getElementById('photo-upload').value = '';
+}
+
+let stream = null;
+
+async function startCamera() {
+    try {
+        stream = await navigator.mediaDevices.getUserMedia({ 
+            video: { 
+                width: { ideal: 1280 },
+                height: { ideal: 720 },
+                facingMode: 'environment' // Use back camera on mobile
+            } 
+        });
+        
+        const video = document.getElementById('camera-video');
+        video.srcObject = stream;
+        
+        document.getElementById('capture-btn').disabled = false;
+        document.getElementById('camera-status').textContent = 'Camera ready - Click capture to take photo';
+        
+    } catch (error) {
+        console.error('Error accessing camera:', error);
+        document.getElementById('camera-status').textContent = 'Camera access denied or not available';
+    }
+}
+
+function capturePhoto() {
+    try {
+        const video = document.getElementById('camera-video');
+        const canvas = document.getElementById('photo-canvas');
+        const context = canvas.getContext('2d');
+        
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        context.drawImage(video, 0, 0);
+        
+        currentPhotoData = canvas.toDataURL('image/jpeg', 0.8);
+        displayPhotoPreview(currentPhotoData);
+        
+        // Stop camera after capture
+        stopCamera();
+        
+    } catch (error) {
+        console.error('Error capturing photo:', error);
+        document.getElementById('camera-status').textContent = 'Error capturing photo';
+    }
+}
+
+function stopCamera() {
+    if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+        stream = null;
+        
+        const video = document.getElementById('camera-video');
+        video.srcObject = null;
+        
+        document.getElementById('capture-btn').disabled = true;
+        document.getElementById('camera-status').textContent = '';
+    }
+}
