@@ -74,6 +74,7 @@ p {
 .btn-primary {
     background-color: var(--primary);
     color: white;
+    padding: 0 10px;
 }
 
 .btn-primary:hover {
