@@ -41,7 +41,9 @@
     <section id="home" class="hero">
         <div class="hero-container">
             <div class="hero-content">
-                <span id="user-name" class="user-greeting"></span>
+                <div id="user-greeting" class="user-greeting">
+                    <span id="user-name"></span>
+                </div>
                 <h1 class="hero-title">Connecting Hearts to Homes</h1>
                 <p class="hero-subtitle">Report and help relocate elderly or differently-abled individuals by connecting them with nearby care homes and support services.</p>
                 <div class="hero-buttons">
@@ -229,11 +231,33 @@
                 <div class="form-group">
                     <label>Photo Evidence (Optional)</label>
                     <div class="camera-section">
+                        <div class="photo-options">
+                            <button type="button" class="btn btn-outline photo-option-btn" onclick="selectPhotoOption('upload')">
+                                📁 Upload Photo
+                            </button>
+                            <button type="button" class="btn btn-outline photo-option-btn" onclick="selectPhotoOption('camera')">
+                                📷 Take Photo
+                            </button>
+                        </div>
+                        
+                        <!-- File Upload Section -->
+                        <div id="upload-section" class="upload-section" style="display: none;">
+                            <input type="file" id="photo-upload" accept="image/*" onchange="handleFileUpload(event)">
+                            <label for="photo-upload" class="upload-label">
+                                <div class="upload-icon">📁</div>
+                                <span>Click to select photo from gallery</span>
+                            </label>
+                        </div>
+                        
+                        <!-- Camera Section -->
+                        <div id="camera-section" class="camera-section-content" style="display: none;">
                         <div class="camera-controls">
                             <button type="button" class="btn btn-secondary" onclick="startCamera()">Start Camera</button>
                             <button type="button" class="btn btn-primary" onclick="capturePhoto()" id="capture-btn" disabled>Capture Photo</button>
                             <button type="button" class="btn btn-outline" onclick="stopCamera()">Stop Camera</button>
                         </div>
+                        </div>
+                        
                         <div class="camera-container">
                             <video id="camera-video" autoplay playsinline style="display: none;"></video>
                             <canvas id="photo-canvas" style="display: none;"></canvas>

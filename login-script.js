@@ -35,11 +35,10 @@ document.getElementById('login-form').addEventListener('submit', function(event)
     
     const email = document.getElementById('login-email').value;
     const password = document.getElementById('login-password').value;
-    const rememberMe = document.getElementById('remember-me').checked;
     const submitButton = event.target.querySelector('button[type="submit"]');
     
     // Add loading state
-    submitButton.classList.add('loading');
+    submitButton.textContent = 'Signing In...';
     submitButton.disabled = true;
     
     // Simulate API call delay
@@ -57,10 +56,6 @@ document.getElementById('login-form').addEventListener('submit', function(event)
             
             // Store current user
             localStorage.setItem('youaid-current-user', JSON.stringify(demoUser));
-            
-            if (rememberMe) {
-                localStorage.setItem('youaid-remember-user', 'true');
-            }
             
             showMessage('Login successful! Redirecting...', 'success');
             
@@ -84,10 +79,6 @@ document.getElementById('login-form').addEventListener('submit', function(event)
             
             localStorage.setItem('youaid-current-user', JSON.stringify(currentUser));
             
-            if (rememberMe) {
-                localStorage.setItem('youaid-remember-user', 'true');
-            }
-            
             showMessage('Login successful! Redirecting...', 'success');
             
             setTimeout(() => {
@@ -95,7 +86,7 @@ document.getElementById('login-form').addEventListener('submit', function(event)
             }, 1500);
         } else {
             showMessage('Invalid email or password. Please try again.');
-            submitButton.classList.remove('loading');
+            submitButton.textContent = 'Sign In';
             submitButton.disabled = false;
         }
     }, 1500);
