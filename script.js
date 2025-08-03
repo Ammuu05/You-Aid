@@ -66,14 +66,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Update user interface when logged in
 function updateUserInterface(user) {
-    const authButtons = document.getElementById('auth-buttons');
-    const userMenu = document.getElementById('user-menu');
     const userName = document.getElementById('user-name');
+    const userGreeting = document.getElementById('user-greeting');
     
-    if (authButtons && userMenu && userName) {
-        authButtons.style.display = 'none';
-        userMenu.style.display = 'flex';
-        userName.textContent = `Welcome, ${user.name}`;
+    if (userName && userGreeting) {
+        userName.textContent = `Welcome, ${user.name}!`;
+        userGreeting.style.display = 'block';
     }
 }
 
