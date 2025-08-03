@@ -41,6 +41,9 @@ document.getElementById('login-form').addEventListener('submit', function(event)
     submitButton.textContent = 'Signing In...';
     submitButton.disabled = true;
     
+    // Log login attempt
+    logLoginAttempt(email, false);
+    
     // Simulate API call delay
     setTimeout(() => {
         // Get stored users
@@ -56,6 +59,9 @@ document.getElementById('login-form').addEventListener('submit', function(event)
             
             // Store current user
             localStorage.setItem('youaid-current-user', JSON.stringify(demoUser));
+            
+            // Log successful login
+            logLoginAttempt(email, true);
             
             showMessage('Login successful! Redirecting...', 'success');
             
@@ -79,6 +85,9 @@ document.getElementById('login-form').addEventListener('submit', function(event)
             
             localStorage.setItem('youaid-current-user', JSON.stringify(currentUser));
             
+            // Log successful login
+            logLoginAttempt(email, true);
+            
             showMessage('Login successful! Redirecting...', 'success');
             
             setTimeout(() => {
@@ -91,6 +100,28 @@ document.getElementById('login-form').addEventListener('submit', function(event)
         }
     }, 1500);
 });
+
+// Function to log login attempts
+function logLoginAttempt(email, success) {
+    const loginActivity = JSON.parse(localStorage.getItem('youaid-login-activity') || '[]');
+    
+    const logEntry = {
+        email: email,
+        timestamp: new Date().toISOString(),
+        success: success,
+        userAgent: navigator.userAgent,
+        ip: 'localhost' // In a real app, this would be the actual IP
+    };
+    
+    loginActivity.push(logEntry);
+    
+    // Keep only last 100 login attempts to prevent storage bloat
+    if (loginActivity.length > 100) {
+        loginActivity.splice(0, loginActivity.length - 100);
+    }
+    
+    localStorage.setItem('youaid-login-activity', JSON.stringify(loginActivity));
+}
 
 // Signup form handler
 document.getElementById('signup-form').addEventListener('submit', function(event) {
